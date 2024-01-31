@@ -1,10 +1,10 @@
-# dart_ui_isolate
+## dart_ui_isolate
 
 This plugin let you run `dart:ui` in an isolate.
 
 See this issue: https://github.com/flutter/flutter/issues/10647
 
-### FlutterEngineGroup Support
+## FlutterEngineGroup Support
 
 Unlike [flutter_isolate](https://pub.dev/packages/flutter_isolate), `dart_ui_isolate` supports `FlutterEngineGroup`.
 
@@ -12,7 +12,7 @@ Unlike [flutter_isolate](https://pub.dev/packages/flutter_isolate), `dart_ui_iso
 
 `FlutterEngineGroup` is supported on both iOS & Android, but not macOS.
 
-### No Platform Plugin Support
+## No Platform Plugin Support
 
 Unlike [flutter_isolate](https://pub.dev/packages/flutter_isolate), `dart_ui_isolate` does *not* support calling platform plugins in the spawned isolate. 
 
@@ -23,7 +23,7 @@ Why?
 
 **If you need to use both `dart:ui` & platform plugins from the same isolate, you will need to use [flutter_isolate](https://pub.dev/packages/flutter_isolate).**
 
-### DartUiIsolate API
+## DartUiIsolate API
 
 |                       |      Android       |         iOS          |             Description            |
 | :-------------------- | :----------------: | :------------------: |  :-------------------------------- |
@@ -33,17 +33,17 @@ Why?
 | isolate.kill()        | :white_check_mark: |  :white_check_mark:  | kills the an isolate               |
 | flutterCompute()      | :white_check_mark: |  :white_check_mark:  | runs code in compute callback      |
 
-### Usage
+## Usage
 
 To spawn a DartUiIsolate, call the `spawn()` method, or the `flutterCompute()` method.
 
-### Killing
+## Killing
 
 `DartUiIsolate`s require explict termination with `kill()`.
 
 `DartUiIsolate`s are backed by a platform specific 'view', so the event loop does not automatically terminate when there is no more work left.
 
-### MacOS
+## MacOS
 
 Due to limitations on Flutter macOS, you must put this code in your `/lib/main.dart` file.
 
@@ -70,7 +70,7 @@ Future<int> doExpensiveWorkInBackground() async {
 }
 ```
 
-### Isolate Entry Point
+## Isolate Entry Point
 
 The isolate entrypoint must be a *top-level* function, or a class `static` method.
 
