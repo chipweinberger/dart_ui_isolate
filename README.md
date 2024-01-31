@@ -8,7 +8,7 @@ See this issue: https://github.com/flutter/flutter/issues/10647
 
 Unlike [flutter_isolate](https://pub.dev/packages/flutter_isolate), `dart_ui_isolate` supports `FlutterEngineGroup`.
 
-`FlutterEngineGroup` makes spawning isolates instant. It also reduces 99% of RAM.
+`FlutterEngineGroup` makes spawning isolates instant. It also reduces 99% of RAM for spawned isolates.
 
 `FlutterEngineGroup` is supported on both iOS & Android, but not macOS.
 
