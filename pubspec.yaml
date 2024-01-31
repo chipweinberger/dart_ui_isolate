@@ -1,6 +1,6 @@
 name: dart_ui_isolate
 description: "Run `dart:ui` in an isolate."
-version: 1.1.0
+version: 1.1.1
 homepage: https://github.com/chipweinberger/dart_ui_isolate
 
 environment:
