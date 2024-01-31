@@ -6,9 +6,22 @@ See this issue: https://github.com/flutter/flutter/issues/10647
 
 ### FlutterEngineGroup Support
 
-Unlike [flutter_isolate](https://pub.dev/packages/flutter_isolate), `dart_ui_isolate` supports `FlutterEngineGroup` (iOS & Android).
+Unlike [flutter_isolate](https://pub.dev/packages/flutter_isolate), `dart_ui_isolate` supports `FlutterEngineGroup`.
 
-`FlutterEngineGroup` reuses 99% of RAM on each spawned isolate & isolates spawn instantly.
+`FlutterEngineGroup` makes spawning isolates instant. It also reduces 99% of RAM.
+
+`FlutterEngineGroup` is supported on both iOS & Android, but not macOS.
+
+### No Platform Plugin Support
+
+Unlike [flutter_isolate](https://pub.dev/packages/flutter_isolate), `dart_ui_isolate` does *not* support calling platform plugins in the spawned isolate. 
+
+Why?
+1. Standard `Isolate`s support platform plaugins as of Flutter 3.7. You can just use a standard `Isolate`.
+2. Removing platform plugin support simplifies `dart_ui_isolate`
+3. Platform plugins don't always work with `FlutterEngineGroup` See: https://github.com/rmawatson/flutter_isolate/pull/151
+
+**If you need to use both `dart:ui` & platform plugins from the same isolate, you will need to use [flutter_isolate](https://pub.dev/packages/flutter_isolate).**
 
 ### DartUiIsolate API
 

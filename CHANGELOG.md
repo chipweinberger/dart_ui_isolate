@@ -1,4 +1,4 @@
-## 1.1.0
+## 1.1.1
 
 * **[Fix]** build errors on iOS and android
 
