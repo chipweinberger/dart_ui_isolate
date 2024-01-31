@@ -54,7 +54,7 @@ Due to limitations on Flutter macOS, you must put this code in your `/lib/main.d
 void _flutterIsolateEntryPoint() => DartUiIsolate.macosIsolateInitialize();
 ```
 
-### Compute Callback
+## Compute Callback
 
 To use an isolate for a single task (like the Flutter [`compute` method](https://api.flutter.dev/flutter/foundation/compute-constant.html)), use `flutterCompute`:
 
