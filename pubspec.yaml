@@ -1,5 +1,5 @@
 name: dart_ui_isolate
-description: "Allows running `dart:ui` in an isolate."
+description: "Run `dart:ui` in an isolate."
 version: 1.0.0
 homepage: https://github.com/chipweinberger/dart_ui_isolate
 
@@ -15,7 +15,7 @@ flutter:
   plugin:
     platforms:
       android:
-        package: com.lib.dart_ui_isolate.dart_ui_isolate
+        package: com.lib.dart_ui_isolate
         pluginClass: DartUiIsolatePlugin
       ios:
         pluginClass: DartUiIsolatePlugin

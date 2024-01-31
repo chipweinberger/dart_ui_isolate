@@ -4,7 +4,11 @@ This plugin let you run `dart:ui` in an isolate.
 
 See this issue: https://github.com/flutter/flutter/issues/10647
 
-Inspired by [flutter_isolate](https://pub.dev/packages/flutter_isolate), this plugin uses multiple `FlutterEngine` instances.
+### FlutterEngineGroup Support
+
+Unlike [flutter_isolate](https://pub.dev/packages/flutter_isolate), `dart_ui_isolate` supports `FlutterEngineGroup` (iOS & Android).
+
+`FlutterEngineGroup` reuses 99% of RAM on each spawned isolate & isolates spawn instantly.
 
 ### DartUiIsolate API
 
@@ -25,6 +29,16 @@ To spawn a DartUiIsolate, call the `spawn()` method, or the `flutterCompute()` m
 `DartUiIsolate`s require explict termination with `kill()`.
 
 `DartUiIsolate`s are backed by a platform specific 'view', so the event loop does not automatically terminate when there is no more work left.
+
+### MacOS
+
+Due to limitations on Flutter macOS, you must put this code in your `/lib/main.dart` file.
+
+**/lib/main.dart**
+```
+@pragma('vm:entry-point')
+void _flutterIsolateEntryPoint() => DartUiIsolate.macosIsolateInitialize();
+```
 
 ### Compute Callback
 
@@ -48,8 +62,6 @@ Future<int> doExpensiveWorkInBackground() async {
 The isolate entrypoint must be a *top-level* function, or a class `static` method.
 
 The isolate entrypoint must decorated with `@pragma('vm:entry-point')`. Otherwise the app will crash in release mode.
-
-**MacOS:** Due to limitations on macOS, the enty point must be in `/lib/main.dart`.
 
 **Top-Level Entry Point:**
 

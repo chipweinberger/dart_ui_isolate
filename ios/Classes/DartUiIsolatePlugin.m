@@ -66,8 +66,6 @@ static NSMutableDictionary<NSString*,IsolateHolder*>* _activeIsolates;
     [isolate.startupChannel setStreamHandler:self];
     
     [_registrar addMethodCallDelegate:self channel:isolate.controlChannel];
-
-    [[DartUiIsolatePlugin lookupGeneratedPluginRegistrant] registerWithRegistry:isolate.engine];
 }
 
 

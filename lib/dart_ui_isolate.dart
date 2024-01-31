@@ -6,10 +6,32 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-export 'src/compute.dart';
+//////////////////////////////////////////////////////
+// ███████  ███    ██  ████████  ██████   ██    ██
+// ██       ████   ██     ██     ██   ██   ██  ██
+// █████    ██ ██  ██     ██     ██████     ████
+// ██       ██  ██ ██     ██     ██   ██     ██
+// ███████  ██   ████     ██     ██   ██     ██
+//
+// ██████    ██████   ██  ███    ██  ████████
+// ██   ██  ██    ██  ██  ████   ██     ██
+// ██████   ██    ██  ██  ██ ██  ██     ██
+// ██       ██    ██  ██  ██  ██ ██     ██
+// ██        ██████   ██  ██   ████     ██
+
+/// This is the real entry point of all spawned isolates.
+/// We will later call the user entry point.
+@pragma('vm:entry-point')
+void _flutterIsolateEntryPoint() => DartUiIsolate._isolateInitialize();
+
+////////////////////////////////////////////////////////////////
+// ██  ███████   ██████   ██        █████   ████████  ███████
+// ██  ██       ██    ██  ██       ██   ██     ██     ██
+// ██  ███████  ██    ██  ██       ███████     ██     █████
+// ██       ██  ██    ██  ██       ██   ██     ██     ██
+// ██  ███████   ██████   ███████  ██   ██     ██     ███████
 
 class DartUiIsolate {
-
   static DartUiIsolate? _current;
   static final _control = MethodChannel("com.lib.dart_ui_isolate/control");
   static final _event = EventChannel("com.lib.dart_ui_isolate/event");
@@ -75,7 +97,9 @@ class DartUiIsolate {
     final setupReceivePort = ReceivePort();
 
     IsolateNameServer.registerPortWithName(setupReceivePort.sendPort, isolateId);
+
     late StreamSubscription setupSubscription;
+
     setupSubscription = setupReceivePort.listen((data) {
       final portSetup = (data as List<dynamic>);
       final setupPort = portSetup[0] as SendPort;
@@ -87,22 +111,22 @@ class DartUiIsolate {
       setupReceivePort.close();
       isolateResult.complete(remoteIsolate);
     });
+
     _control.invokeMethod("spawn_isolate", {
       "entry_point": PluginUtilities.getCallbackHandle(_flutterIsolateEntryPoint)!.toRawHandle(),
       "isolate_id": isolateId
     });
+
     return isolateResult.future;
   }
 
   @pragma('vm:entry-point')
   static void _isolateInitialize() {
-
     WidgetsFlutterBinding.ensureInitialized();
 
     late StreamSubscription eventSubscription;
 
     eventSubscription = _event.receiveBroadcastStream().listen((isolateId) {
-
       _current = DartUiIsolate._(isolateId, null, null);
 
       final sendPort = IsolateNameServer.lookupPortByName(_current!._isolateId!)!;
@@ -121,7 +145,7 @@ class DartUiIsolate {
       eventSubscription.cancel();
 
       late StreamSubscription setupSubscription;
-      
+
       setupSubscription = setupReceivePort.listen((data) {
         final args = data as List<Object?>;
         final userEntryPointHandle = args[0] as int;
@@ -135,6 +159,102 @@ class DartUiIsolate {
     });
   }
 }
+
+////////////////////////////////////////////////////////////////////////
+//  ██████   ██████   ███    ███  ██████   ██    ██  ████████  ███████
+// ██       ██    ██  ████  ████  ██   ██  ██    ██     ██     ██
+// ██       ██    ██  ██ ████ ██  ██████   ██    ██     ██     █████
+// ██       ██    ██  ██  ██  ██  ██       ██    ██     ██     ██
+//  ██████   ██████   ██      ██  ██        ██████      ██     ███████
+
+enum _Status {
+  ok,
+  error,
+}
+
+/// A function that spawns a flutter isolate and runs the provided [callback] on
+/// that isolate, passes it the provided [message], and (eventually) returns the
+/// value returned by [callback].
+///
+/// Since [callback] needs to be passed between isolates, it must be a top-level
+/// function or a static method.
+///
+/// Both the return type and the [message] type must be supported by
+/// [SendPort.send] stated in
+/// https://api.dart.dev/stable/dart-isolate/SendPort/send.html
+@pragma('vm:entry-point')
+Future<T> flutterCompute<T, U>(FutureOr<T> Function(U message) callback, U message) async {
+  final callbackHandle = PluginUtilities.getCallbackHandle(callback)!.toRawHandle();
+  final completer = Completer<dynamic>();
+  final port = RawReceivePort();
+
+  port.handler = (dynamic response) {
+    port.close();
+    completer.complete(response);
+  };
+
+  DartUiIsolate? isolate;
+
+  // spawn
+  try {
+    isolate = await DartUiIsolate.spawn(_isolateMain, {
+      "callback": callbackHandle,
+      "port": port.sendPort,
+      "message": message,
+    });
+  } catch (_) {
+    port.close();
+    isolate?.kill();
+    rethrow;
+  }
+
+  final response = await completer.future;
+
+  isolate.kill();
+
+  // no result?
+  if (response == null) {
+    throw RemoteError("Isolate exited without result or error.", "");
+  }
+  
+  // error?
+  if (response["status"] != _Status.ok.index) {
+    await Future<Never>.error(
+      RemoteError(response["error"], response["stackTrace"]),
+    );
+  }
+
+  // success 
+  return response["result"] as T;
+}
+
+@pragma('vm:entry-point')
+Future<void> _isolateMain(Map<String, dynamic> config) async {
+  final port = config["port"] as SendPort;
+  try {
+    final callbackHandle = CallbackHandle.fromRawHandle(config["callback"]);
+    final callback = PluginUtilities.getCallbackFromHandle(callbackHandle);
+    final message = config["message"];
+    final result = await callback!(message);
+    port.send({
+      "status": _Status.ok.index,
+      "result": result,
+    });
+  } catch (e, stackTrace) {
+    port.send({
+      "status": _Status.error.index,
+      "error": e.toString(),
+      "stackTrace": stackTrace.toString(),
+    });
+  }
+}
+
+/////////////////////////////////////////////
+// ██    ██  ████████  ██  ██       ███████
+// ██    ██     ██     ██  ██       ██
+// ██    ██     ██     ██  ██       ███████
+// ██    ██     ██     ██  ██            ██
+//  ██████      ██     ██  ███████  ███████
 
 // helper function
 String _uuid() {
@@ -154,7 +274,3 @@ String _uuid() {
 
   return '$a-$b-$c-$d-$e';
 }
-
-
-@pragma('vm:entry-point')
-void _flutterIsolateEntryPoint() => DartUiIsolate._isolateInitialize();
