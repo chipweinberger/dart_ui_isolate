@@ -10,7 +10,7 @@ Unlike [flutter_isolate](https://pub.dev/packages/flutter_isolate), `dart_ui_iso
 
 `FlutterEngineGroup` makes spawning isolates instant. It also reduces 99% of RAM for spawned isolates.
 
-`FlutterEngineGroup` is supported on both iOS & Android, but not macOS.
+**Note**: `FlutterEngineGroup` is supported on both iOS & Android, but not macOS.
 
 ## No Platform Plugin Support
 
