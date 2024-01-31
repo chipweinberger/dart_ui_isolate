@@ -16,7 +16,7 @@ Unlike [flutter_isolate](https://pub.dev/packages/flutter_isolate), `dart_ui_iso
 
 Unlike [flutter_isolate](https://pub.dev/packages/flutter_isolate), `dart_ui_isolate` does *not* support calling platform plugins in the spawned isolate. 
 
-As of Flutter 3.7, you can call platform plugins from normal `Isolate`s.  Just use a normal `Isolate` instead of `dart_ui_isolate`.
+**As of Flutter 3.7, you can call platform plugins from normal `Isolate`s.  Just use a normal `Isolate` instead of `dart_ui_isolate`.**
 
 There are a couple more advantages:
 1. Removing support for platform plugins makes `dart_ui_isolate` simpler.
