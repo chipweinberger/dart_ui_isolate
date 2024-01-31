@@ -1,0 +1,15 @@
+name: dart_ui_isolate_example
+description: Demonstrates how to use the dart_ui_isolate plugin.
+publish_to: 'none'
+
+environment:
+  sdk: ">=2.12.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  dart_ui_isolate:
+    path: ../
+
+flutter:
+  uses-material-design: true

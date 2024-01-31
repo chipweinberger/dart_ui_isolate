@@ -1,0 +1,22 @@
+PODS:
+  - dart_ui_isolate (0.0.1):
+    - Flutter
+  - Flutter (1.0.0)
+
+DEPENDENCIES:
+  - dart_ui_isolate (from `.symlinks/plugins/dart_ui_isolate/ios`)
+  - Flutter (from `Flutter`)
+
+EXTERNAL SOURCES:
+  dart_ui_isolate:
+    :path: ".symlinks/plugins/dart_ui_isolate/ios"
+  Flutter:
+    :path: Flutter
+
+SPEC CHECKSUMS:
+  dart_ui_isolate: d5bcda83ca4b04f129d70eb90110b7a567aece14
+  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+
+PODFILE CHECKSUM: 6e700dec67e6deac9b1c69bb14c49a2217a12d15
+
+COCOAPODS: 1.14.3
