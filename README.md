@@ -16,11 +16,11 @@ Unlike [flutter_isolate](https://pub.dev/packages/flutter_isolate), `dart_ui_iso
 
 Unlike [flutter_isolate](https://pub.dev/packages/flutter_isolate), `dart_ui_isolate` does *not* support calling platform plugins in the spawned isolate. 
 
-Why?
-1. `dart_ui_isolate` is targeted specifically for `dart:ui`, not platform plugins.
-2. As of Flutter 3.7, you can call platform plugins in normal `Isolate`s.  Just use a normal `Isolate` instead of `dart_ui_isolate`.
-3. Removing support for platform plugins makes `dart_ui_isolate` simpler.
-4. Platform plugins don't always work with `FlutterEngineGroup` See: https://github.com/rmawatson/flutter_isolate/pull/151
+As of Flutter 3.7, you can call platform plugins from normal `Isolate`s.  Just use a normal `Isolate` instead of `dart_ui_isolate`.
+
+There are a couple more advantages:
+1. Removing support for platform plugins makes `dart_ui_isolate` simpler.
+2. Platform plugins don't always work well with `FlutterEngineGroup` See: https://github.com/rmawatson/flutter_isolate/pull/151
 
 **If you need to use both `dart:ui` & platform plugins from the same isolate, you will need to use [flutter_isolate](https://pub.dev/packages/flutter_isolate).**
 
