@@ -20,7 +20,7 @@ Unlike [flutter_isolate](https://pub.dev/packages/flutter_isolate), `dart_ui_iso
 
 There are a couple more advantages:
 1. Removing support for platform plugins makes `dart_ui_isolate` simpler.
-2. Removing support for platform plugins allows using `FlutterEngineGroup` See: https://github.com/rmawatson/flutter_isolate/pull/151
+2. Removing support for platform plugins allows `FlutterEngineGroup` See: https://github.com/rmawatson/flutter_isolate/pull/151
 
 
 
