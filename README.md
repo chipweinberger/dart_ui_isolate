@@ -36,7 +36,7 @@ There are a couple more advantages:
 
 ## Usage
 
-To spawn a DartUiIsolate, call the `spawn()` method, or the `flutterCompute()` method.
+To spawn a `DartUiIsolate`, call the `spawn()` method, or the `flutterCompute()` method.
 
 ## Killing
 
