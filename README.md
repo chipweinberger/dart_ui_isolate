@@ -40,9 +40,9 @@ To spawn a `DartUiIsolate`, call the `spawn()` method, or the `flutterCompute()`
 
 ## Killing
 
-`DartUiIsolate`s require explict termination with `kill()`.
+`DartUiIsolate` requires explict termination with `kill()`.
 
-`DartUiIsolate`s are backed by a platform specific 'view', so the event loop does not automatically terminate when there is no more work left.
+**Why?** `DartUiIsolate` is backed by a platform specific 'view', so the event loop does not automatically terminate when there is no more work left.
 
 ## MacOS
 
